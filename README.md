@@ -177,6 +177,54 @@ python doall.py -hostname exxwin22sum25 -https_port 5577 -password MySecret -ali
 
 ---
 
+### 5. `extract_truststore.py`
+
+Extracts a server's TLS certificate via `keytool -printcert -sslserver` and
+imports it into a local PKCS12 truststore. Useful when you need to trust an
+external server's certificate (e.g. a remote IS instance) without going through
+`create_certificates.py`.
+
+**Prerequisites:**
+
+- `keytool` available at `C:\SoftwareAG\jvm\jvm\bin\keytool` (hardcoded; edit
+  `JAVA_HOME` at the top of the script if your JVM lives elsewhere).
+
+**What it does:**
+
+| Step | Action |
+|---|---|
+| 1 | Connects to `<server>:<port>` and saves the PEM certificate to `<server>.crt` |
+| 2 | Imports the certificate into `certificates\<server>.p12` (PKCS12, created if absent) |
+| 3 | Lists the truststore contents to confirm the import |
+
+**Parameters:**
+
+| Parameter | Required | Description |
+|---|---|---|
+| `server:port` | ✅ | Target server and port, e.g. `exxwin22sum25:5543` |
+
+**Defaults** (edit at the top of the script):
+
+| Constant | Value |
+|---|---|
+| `STOREPASS` | `changeIt` |
+| `JAVA_HOME` | `C:\SoftwareAG\jvm\jvm` |
+
+**Output files:**
+
+| File | Description |
+|---|---|
+| `certificates\<server>.crt` | PEM certificate extracted from the server |
+| `certificates\<server>.p12` | PKCS12 truststore containing the imported certificate |
+
+**Example:**
+
+```bash
+python extract_truststore.py exxwin22sum25:5543
+```
+
+---
+
 ## Typical workflow
 
 ### Option A — one command
