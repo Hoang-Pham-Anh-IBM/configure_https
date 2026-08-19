@@ -13,14 +13,32 @@ webMethods Integration Server (IS).
 A virtual environment (`.venv`) is **not created automatically** — run these
 steps once before using the scripts:
 
+**Windows:**
+```bat
+cd py_project
+
+:: 1. Create the virtual environment
+C:\Users\<you>\AppData\Local\Programs\Python\Python312\python.exe -m venv .venv
+
+:: 2. Activate it
+.venv\Scripts\activate
+
+:: 3. Install Python packages
+pip install -r requirements.txt
+
+:: 4. Install the Chromium browser used by Playwright
+python -m playwright install chromium
+```
+
+**Linux / macOS:**
 ```bash
 cd py_project
 
-# 1. Create the virtual environment (Python 3.12 explicit path — adjust if needed)
-C:\Users\<you>\AppData\Local\Programs\Python\Python312\python.exe -m venv .venv
+# 1. Create the virtual environment
+python3 -m venv .venv
 
 # 2. Activate it
-.venv\Scripts\activate
+source .venv/bin/activate
 
 # 3. Install Python packages
 pip install -r requirements.txt
@@ -31,9 +49,13 @@ python -m playwright install chromium
 
 For every subsequent terminal session, only the activation step is needed:
 
-```bash
-cd py_project
+```bat
+:: Windows
 .venv\Scripts\activate
+```
+```bash
+# Linux / macOS
+source .venv/bin/activate
 ```
 
 ---

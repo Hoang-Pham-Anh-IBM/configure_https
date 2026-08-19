@@ -1,12 +1,27 @@
 import argparse
 import os
+import platform
 import subprocess
 import sys
 from pathlib import Path
 
-_SAG_JVM = Path(r"C:\SoftwareAG\jvm\jvm")
-JAVA_HOME = str(_SAG_JVM) if _SAG_JVM.exists() else os.environ.get("JAVA_HOME", "")
-KEYTOOL = str(Path(JAVA_HOME) / "bin" / "keytool.exe") if JAVA_HOME else "keytool"
+# Resolve keytool:
+#   1. SAG bundled JVM (Windows or Linux path)
+#   2. JAVA_HOME env variable
+#   3. keytool on PATH
+def _resolve_keytool() -> str:
+    is_windows = platform.system() == "Windows"
+    sag_jvm = Path(r"C:\SoftwareAG\jvm\jvm") if is_windows else Path("/opt/exx/installed/jvm/jvm")
+    if sag_jvm.exists():
+        java_home = sag_jvm
+    elif os.environ.get("JAVA_HOME"):
+        java_home = Path(os.environ["JAVA_HOME"])
+    else:
+        return "keytool"  # rely on PATH
+    exe = "keytool.exe" if is_windows else "keytool"
+    return str(java_home / "bin" / exe)
+
+KEYTOOL = _resolve_keytool()
 
 
 def run(cmd: list[str], step: str) -> None:
