@@ -57,6 +57,7 @@ def main() -> None:
 
     print()
     print(f"=== Step 1: Extract certificate from {server}:{port} ===")
+    cert_file.parent.mkdir(parents=True, exist_ok=True)
     with cert_file.open("w", encoding="utf-8") as cert_out:
         result = run(
             [str(KEYTOOL), "-printcert", "-sslserver", f"{server}:{port}", "-rfc"],
@@ -69,7 +70,6 @@ def main() -> None:
 
     print()
     print("=== Step 2: Import certificate into truststore ===")
-    truststore.parent.mkdir(parents=True, exist_ok=True)
     result = run(
         [
             str(KEYTOOL), "-import",
